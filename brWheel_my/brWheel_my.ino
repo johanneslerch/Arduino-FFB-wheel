@@ -406,7 +406,7 @@ void loop() {
         //SendInputReport((s16)turn, (u16)accel, (u16)brake, (u16)clutch, button);
         //SendInputReport((s16)turn, (u16)accel, (u16)brake, (u16)clutch, (u16)shifterX, (u16)shifterY, buttons); // original
         //SendInputReport((s32)turn, (u16)brake, (u16)accel, (u16)clutch, button); // milos, X, Y, Z, RX, button
-        SendInputReport(turn + MID_REPORT_X + 1, brake, accel, clutch, hbrake, button); // milos, X, Y, Z, RX, RY, hat+button; 0,32768,65535 X-axis range
+        SendInputReport(turn + MID_REPORT_X + 1, brake, accel, clutch, hbrake, 0 /*button*/); // milos, X, Y, Z, RX, RY, hat+button; 0,32768,65535 X-axis range
 
 #ifdef AVG_INPUTS //milos, added option see config.h
         ClearAnalogInputs();
