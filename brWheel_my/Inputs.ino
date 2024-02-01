@@ -231,8 +231,8 @@ void nextInputState() {
     i = 0;
   }
   if (SHIFTREG_STATE < 2) {
-    if (SHIFTREG_STATE == 0) digitalWriteFast(SHIFTREG_PL, HIGH); //milos, changed to fast, was LOW
-    if (SHIFTREG_STATE == 1) digitalWriteFast(SHIFTREG_PL, LOW); //milos, changed to fast, was HIGH
+    if (SHIFTREG_STATE == 0) digitalWriteFast(SHIFTREG_PL, LOW); //milos, changed to fast, was LOW
+    if (SHIFTREG_STATE == 1) digitalWriteFast(SHIFTREG_PL, HIGH); //milos, changed to fast, was HIGH
   } else {
     if (SHIFTREG_STATE % 2 == 0) {
       bitVal = bitRead(digitalReadFast(SHIFTREG_DATA_SW), 7); // milos, faster reading
@@ -334,7 +334,7 @@ u32 readInputButtons() {
 #ifdef USE_HATSWITCH // milos, added
   buttons = decodeHat(buttons); //milos, decodes hat switch values into only 1st 4 buttons (button0-up, button1-right, button2-down, button3-left)
 #else
-  buttons = buttons << 4; //milos, bitshift to the left 4bits to skip updating hat switch
+  //buttons = buttons << 4; //milos, bitshift to the left 4bits to skip updating hat switch
 #endif // end of hat switch
 
   return (buttons); // milos, we send all 4 bytes

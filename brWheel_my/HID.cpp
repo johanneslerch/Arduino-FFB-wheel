@@ -181,14 +181,14 @@ const u8 _hidReportDescriptor[] =
   0x95, 0x01,           // REPORT_COUNT (1)
   0x81, 0x02,         // INPUT (Data,Var,Abs)
 
-  /*0x09, 0x35,         // USAGE (rz)
-    0x16, RZ_AXIS_LOG_MIN & 0xFF, (RZ_AXIS_LOG_MIN >> 8) & 0xFF, // LOGICAL_MINIMUM
-    0x27, RZ_AXIS_LOG_MAX & 0xFF, (RZ_AXIS_LOG_MAX >> 8) & 0xFF, 0, 0, // LOGICAL_MAXIMUM
-    0x35, 0x00,         // PHYSICAL_MINIMUM (00)
-    0x47, RZ_AXIS_PHYS_MAX & 0xFF, (RZ_AXIS_PHYS_MAX >> 8) & 0xFF, 0, 0,//(RZ_AXIS_PHYS_MAX >> 16) & 0xFF,(RZ_AXIS_PHYS_MAX >> 24) & 0xFF, // PHYSICAL_MAXIMUM (0xffff)
-    0x75, RZ_AXIS_NB_BITS,   // REPORT_SIZE (AXIS_NB_BITS)
-    0x95, 0x01,           // REPORT_COUNT (1)
-    0x81, 0x02,         // INPUT (Data,Var,Abs)*/
+  0x09, 0x35,         // USAGE (rz)
+  0x16, RZ_AXIS_LOG_MIN & 0xFF, (RZ_AXIS_LOG_MIN >> 8) & 0xFF, // LOGICAL_MINIMUM
+  0x27, RZ_AXIS_LOG_MAX & 0xFF, (RZ_AXIS_LOG_MAX >> 8) & 0xFF, 0, 0, // LOGICAL_MAXIMUM
+  0x35, 0x00,         // PHYSICAL_MINIMUM (00)
+  0x47, RZ_AXIS_PHYS_MAX & 0xFF, (RZ_AXIS_PHYS_MAX >> 8) & 0xFF, 0, 0,//(RZ_AXIS_PHYS_MAX >> 16) & 0xFF,(RZ_AXIS_PHYS_MAX >> 24) & 0xFF, // PHYSICAL_MAXIMUM (0xffff)
+  0x75, RZ_AXIS_NB_BITS,   // REPORT_SIZE (AXIS_NB_BITS)
+  0x95, 0x01,           // REPORT_COUNT (1)
+  0x81, 0x02,         // INPUT (Data,Var,Abs)
 
   //0xc0, // END_COLLECTION
 
@@ -1138,7 +1138,7 @@ void Joystick_::send_16_16_12_12_12_28(uint16_t x, uint16_t y, uint16_t z, uint1
 void Joystick_::send_16_16_12_12_12_12_32(int16_t x, uint16_t y, uint16_t z, uint16_t rx, uint16_t ry, uint16_t rz, uint32_t buttons)
 {
   // milos, total of 14 bytes, 2B for x, 2B for y, 3B for z and rx, 3B for ry and rz, 4B for buttons
-  u8 j[14];
+  u8 j[15];
   j[0] = x;
   j[1] = x >> 8;
   j[2] = y;
@@ -1149,12 +1149,13 @@ void Joystick_::send_16_16_12_12_12_12_32(int16_t x, uint16_t y, uint16_t z, uin
   j[7] = ry;
   j[8] = (ry >> 8) & 0xf | ((rz & 0xf) << 4);
   j[9] = rz >> 4;
-  j[10] = buttons;
-  j[11] = buttons >> 8;
-  j[12] = buttons >> 16;
-  j[13] = buttons >> 24;
+  j[10] = buttons << 4; //JL: 4 bits for hat switch, assumed not to be part of buttons here
+  j[11] = buttons >> 4;
+  j[12] = buttons >> 12;
+  j[13] = buttons >> 20;
+  j[14] = buttons >> 28;
 
-  HID_SendReport(4, j, 14);
+  HID_SendReport(4, j, 15);
 }
 
 // DEBUG use 2 axis to H-SHIFTER

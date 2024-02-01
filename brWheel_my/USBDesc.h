@@ -61,7 +61,7 @@
 
 #define NB_AXIS			     5
 #define NB_FF_AXIS		   2  //1
-#define NB_BUTTONS		  24  //16
+#define NB_BUTTONS		  36  //16 //JL buttons +4 hat switch; Make sure number of buttons is a multiple of 8
 #define X_AXIS_NB_BITS	16  //16
 #define Y_AXIS_NB_BITS	16	//10
 #define Z_AXIS_NB_BITS	12  //10
@@ -102,8 +102,8 @@
 //#define SendInputReport(m_x,m_y,m_z,m_rx,sx,sy,m_buttons)			Joystick.send_16_8_32(m_x,m_y,m_z,m_rx,sx,sy,m_buttons)
 //#define SendInputReport(m_x,m_y,m_z,m_rx,m_buttons)			Joystick.send_16_16_10_10_12(m_x,m_y,m_z,m_rx,m_buttons) // milos, ver2
 //#define SendInputReport(m_x,m_y,m_z,m_rx,m_buttons)      Joystick.send_16_16_12_12_32(m_x,m_y,m_z,m_rx,m_buttons) // milos, ver3
-#define SendInputReport(m_x,m_y,m_z,m_rx,m_ry,m_buttons)      Joystick.send_16_16_12_12_12_28(m_x,m_y,m_z,m_rx,m_ry,m_buttons) // milos, ver4
-//#define SendInputReport(m_x,m_y,m_z,m_rx,m_ry,m_rz,m_buttons)      Joystick.send_16_16_12_12_12_12_32(m_x,m_y,m_z,m_rx,m_ry,m_rz,m_buttons) // milos, ver5
+//#define SendInputReport(m_x,m_y,m_z,m_rx,m_ry,m_buttons)      Joystick.send_16_16_12_12_12_28(m_x,m_y,m_z,m_rx,m_ry,m_buttons) // milos, ver4
+#define SendInputReport(m_x,m_y,m_z,m_rx,m_ry,m_rz,m_buttons)      Joystick.send_16_16_12_12_12_12_32(m_x,m_y,m_z,m_rx,m_ry,m_rz,m_buttons) // milos, ver5
 
 #endif
 
