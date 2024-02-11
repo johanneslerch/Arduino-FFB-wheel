@@ -1158,6 +1158,33 @@ void Joystick_::send_16_16_12_12_12_12_32(int16_t x, uint16_t y, uint16_t z, uin
   HID_SendReport(4, j, 15);
 }
 
+// JL ver6, 16+16+12+12+12+12 bits version + 64 buttons
+void Joystick_::send_16_16_12_12_12_12_32_32(int16_t x, uint16_t y, uint16_t z, uint16_t rx, uint16_t ry, uint16_t rz, uint32_t buttons, uint32_t buttons2)
+{
+  u8 j[19];
+  j[0] = x;
+  j[1] = x >> 8;
+  j[2] = y;
+  j[3] = y >> 8;
+  j[4] = z;
+  j[5] = (z >> 8) & 0xf | ((rx & 0xf) << 4);
+  j[6] = rx >> 4;
+  j[7] = ry;
+  j[8] = (ry >> 8) & 0xf | ((rz & 0xf) << 4);
+  j[9] = rz >> 4;
+  j[10] = buttons << 4; //JL: 4 bits for hat switch, assumed not to be part of buttons here
+  j[11] = buttons >> 4;
+  j[12] = buttons >> 12;
+  j[13] = buttons >> 20;
+  j[14] = buttons >> 28 | buttons2 << 4;
+  j[15] = buttons2 >> 4;
+  j[16] = buttons2 >> 12;
+  j[17] = buttons2 >> 20;
+  j[18] = buttons2 >> 28;
+
+  HID_SendReport(4, j, 19);
+}
+
 // DEBUG use 2 axis to H-SHIFTER
 void Joystick_::send_16_8_32(int16_t x, uint16_t y, uint16_t z, uint16_t rx, uint16_t sx, uint16_t sy, uint32_t buttons)
 {

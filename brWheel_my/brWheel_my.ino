@@ -253,6 +253,19 @@ void setup() {
 #endif
 }
 
+// JL: reorder buttons according to my very specific soldering to shift registers
+u32 reorderButtons(u32 buttons) {
+  u32 out = 0;
+  uint8_t order[] = {6,7,14,15,20,21,22,23,5,4,13,12,19,18,17,16,3,2,0,1,8,9,11,10,27,26,24,25,28,30,29,31};
+
+  for (int i = 0; i < 32; i++) {
+      if (!(buttons & ((u32)1 << order[i]))) {
+          out |= ((u32)1 << i);
+      }
+  }
+  return out;
+}
+
 //--------------------------------------------------------------------------------------------------------
 void loop() {
 #ifdef AVG_INPUTS //milos, added option see config.h
@@ -399,6 +412,9 @@ void loop() {
         brake = constrain(brake, 0, Y_AXIS_PHYS_MAX); // milos
 
         button = readInputButtons(); // milos, reads all buttons including matrix and hat switch
+        button = reorderButtons(button);
+        uint32_t buttons2 = 0;
+        buttons2 |= !digitalRead(12) << 2; //JL Joystick button
 
 #ifdef USE_XY_SHIFTER // milos, added
         button = decodeXYshifter(button, shifterX, shifterY); // milos, added - convert analog XY shifter values into last 8 buttons
@@ -406,7 +422,12 @@ void loop() {
         //SendInputReport((s16)turn, (u16)accel, (u16)brake, (u16)clutch, button);
         //SendInputReport((s16)turn, (u16)accel, (u16)brake, (u16)clutch, (u16)shifterX, (u16)shifterY, buttons); // original
         //SendInputReport((s32)turn, (u16)brake, (u16)accel, (u16)clutch, button); // milos, X, Y, Z, RX, button
-        SendInputReport(turn + MID_REPORT_X + 1, brake, accel, clutch, hbrake, 0, button); // milos, X, Y, Z, RX, RY, hat+button; 0,32768,65535 X-axis range
+        SendInputReport(turn + MID_REPORT_X + 1, 0, 0, 
+          (1023-analogRead(A4))*4, 
+          (1023-analogRead(A3))*4, 
+          analogRead(A5)*4, 
+          button, buttons2); // milos, X, Y, Z, RX, RY, hat+button; 0,32768,65535 X-axis range
+        
 
 #ifdef AVG_INPUTS //milos, added option see config.h
         ClearAnalogInputs();

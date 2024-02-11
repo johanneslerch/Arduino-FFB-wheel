@@ -131,6 +131,12 @@ void InitInputs() {
     pinMode(analog_inputs_pins[i], INPUT);
   }
 
+  //JL using pin 4 and 5 for rotary encoder:
+  pinMode(4, INPUT_PULLUP);
+  pinMode(5, INPUT_PULLUP);
+  //JL using PIN 12 for Joystick button:
+  pinMode(12, INPUT_PULLUP);
+
 #ifdef USE_SHIFT_REGISTER
   InitShiftRegister();
 #else
