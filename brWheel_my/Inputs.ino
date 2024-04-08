@@ -32,6 +32,16 @@
 
 //--------------------------------------- Globals --------------------------------------------------------
 
+const int ENCODER_TRANSITIONS[4][4] = {
+  {  0, -1,  1,  0 },
+  {  1,  0,  0, -1 },
+  { -1,  0,  0,  1 },
+  {  0,  1, -1,  0 }
+};
+
+int encoderState = 0;
+int encoderValue = 0;
+
 u8 analog_inputs_pins[] = // milos, changed to u8, from u16
 {
   ACCEL_PIN,
@@ -131,7 +141,7 @@ void InitInputs() {
     pinMode(analog_inputs_pins[i], INPUT);
   }
 
-  //JL using pin 4 and 5 for rotary encoder:
+//JL using pin 4 and 5 for rotary encoder:
   pinMode(4, INPUT_PULLUP);
   pinMode(5, INPUT_PULLUP);
   //JL using PIN 12 for Joystick button:
@@ -223,6 +233,15 @@ void InitButtons() { // milos, added - if not using shift register, allocate som
 #endif // end of shift reg
 
 
+int updateEncoder() {
+  int newState = (digitalRead(4) << 1u) | digitalRead(5);
+  int step = ENCODER_TRANSITIONS[encoderState][newState];
+  if(step != 0) {
+    encoderState = newState;
+    encoderValue += step;
+  }
+  return step;
+}
 
 #ifdef USE_SHIFT_REGISTER
 void nextInputState() {
