@@ -45,9 +45,11 @@ void SetDefaultConfig () { //milos - sets default values
   SetParam(PARAM_ADDR_INR_GAIN, ffb); //milos, added
   ffb = 70; //milos, added
   SetParam(PARAM_ADDR_CTS_GAIN, ffb); //milos, added
-  val = 0; //milos, added
+  //JL Set min motor PWM
+  val = 60; //milos, added
   SetParam(PARAM_ADDR_MIN_TORQ, val); //milos, added
-  val = 500; //milos, for PWM signals
+  //JL Limit max motor PWM
+  val = 500/3; //milos, for PWM signals
   SetParam(PARAM_ADDR_MAX_TORQ, val); //milos, added
   //minTorquePP = 0.0; //milos, added
   val = 4095; //milos, for 12bit DAC
@@ -58,7 +60,7 @@ void SetDefaultConfig () { //milos - sets default values
   val = 128; //milos, FFB balance center value
 #endif
   SetParam(PARAM_ADDR_BRK_PRES, val); //milos, added
-  ffb = 0b00000001; //milos, added, autocenter spring on
+  ffb = 0b00000011; //milos, added, autocenter spring on //JL enabled damper effect
   SetParam(PARAM_ADDR_DSK_EFFC, ffb); //milos, added
   val32 = 2400; //milos, default CPR value (here you can set a new one)
   SetParam(PARAM_ADDR_ENC_CPR, val32); //milos, added
@@ -105,10 +107,10 @@ void SetDefaultConfig () { //milos - sets default values
 void SetEEPROMConfig () { //milos, changed VERSION to 16bit from 32bit
   u16 value;
   GetParam(PARAM_ADDR_VERSION, value);
-  if (value != VERSION) {							// First time run, or version changed, so put default values for safety
+  //if (value != VERSION) {							// First time run, or version changed, so put default values for safety
     //ClearEEPROMConfig(); //milos, clear EEPROM before loading defaults
     SetDefaultConfig();
-  }
+  //}
 }
 
 void LoadEEPROMConfig () { //milos, added - updates all ffb parameters from EEPROM

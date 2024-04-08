@@ -14,7 +14,9 @@ void InitPWM() {
 #endif // end of center button
 #endif // end of promicro
   TOP = calcTOP(pwmstate); // milos, this will set appropriate TOP value for all PWM modes, depending on pwmstate loaded from EEPROM
-  MM_MAX_MOTOR_TORQUE = TOP;
+  
+  //JL: limit PWM 
+  MM_MAX_MOTOR_TORQUE = TOP/3;
   minTorquePP = ((f32)MM_MIN_MOTOR_TORQUE) / ((f32)MM_MAX_MOTOR_TORQUE); // milos
   RCM_min *= RCMscaler(pwmstate); // milos - takes into account fast pwm or phase correct mode
   RCM_zer *= RCMscaler(pwmstate); // milos
@@ -213,9 +215,11 @@ void PWM16EnableB() {  // milos
 
 inline void PWM16A(uint16_t PWMValue) { // milos
   OCR1A = constrain(PWMValue, 0, TOP);
-}
+    //DEBUG_SERIAL.println(OCR1A);
+  }
 
 inline void PWM16B(uint16_t PWMValue) { // milos
   OCR1B = constrain(PWMValue, 0, TOP);
-}
+    //DEBUG_SERIAL.println(OCR1B);
+  }
 #endif

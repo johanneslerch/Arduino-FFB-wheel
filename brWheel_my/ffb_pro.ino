@@ -36,11 +36,11 @@
 //------------------------------------- Defines ----------------------------------------------------------
 
 const s32 INERTIA_COEF = 16; //milos, added (wheel mass)
-const s32 DAMPER_COEF = 16; //milos, added (wheel viscosity)
+const s32 DAMPER_COEF = 8; //milos, added (wheel viscosity)
 const s32 FRICTION_COEF = 8; //milos, modified (wheel friction)
-const s32 SPRING_COEF = 8; //milos, modified (wheel elasticity)
+const s32 SPRING_COEF = 4; //milos, modified (wheel elasticity)
 
-const s32 AUTO_CENTER_SPRING = 512; //milos, modified
+const s32 AUTO_CENTER_SPRING = 400; //milos, modified
 //#define AUTO_CENTER_DAMPER    64 //milos, commented
 const s32 BOUNDARY_SPRING	=	 32767; //milos, modified
 //#define BOUNDARY_FRICTION		32 //milos, commented
@@ -305,7 +305,7 @@ void SetIndex () {
 }
 
 float EffectDivider() { //milos, added, calculates effects divider in order to scale equaly with all PWM modes
-  return (32767.0 / float(TOP)); //milos, was 32767.0
+  return (32767.0 / float(MM_MAX_MOTOR_TORQUE)); //milos, was 32767.0
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -319,7 +319,7 @@ s32 cFFB::CalcTorqueCommand (s32 pos) {
 
   if (gFFB.mAutoCenter) {
     if (abs(pos) > 1) { //milos, was 50
-      if (bitRead(effstate, 0)) command += SpringEffect(pos, AUTO_CENTER_SPRING / EffectDivider() * configCenterGain / 100); //milos, autocenter spring force is equal (scaled accordingly) for all PWM modes - desktop autocenter effect
+      if (bitRead(effstate, 0)) command += SpringEffect(pos, (float)AUTO_CENTER_SPRING / EffectDivider() * (float)configCenterGain / 100.0); //milos, autocenter spring force is equal (scaled accordingly) for all PWM modes - desktop autocenter effect
     }
   } else for (u8 id = FIRST_EID; id <= MAX_EFFECTS; id++) {
 
