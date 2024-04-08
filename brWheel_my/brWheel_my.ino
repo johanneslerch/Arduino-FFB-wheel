@@ -77,6 +77,8 @@ u16 clutchMin, clutchMax; // milos
 u16 hbrakeMin, hbrakeMax; // milos
 u32 button = 0; //milos, added
 
+u16 recenterCounter = 0;
+
 //milos, added
 #ifdef USE_ADS1015
 //Adafruit_ADS1115 ads(0x48);     /* Use this for the 16-bit version */
@@ -413,7 +415,23 @@ void loop() {
 
         button = readInputButtons(); // milos, reads all buttons including matrix and hat switch
         button = reorderButtons(button);
+
+       if(button & 1) {
+        recenterCounter++;
+        if(recenterCounter > 500) {
+          recenter();
+          blinkFFBclipLED();
+          recenterCounter = 0;
+        }
+       } else {
+        recenterCounter = 0;
+       }
+
+        int encoderChange = updateEncoder();
+
         uint32_t buttons2 = 0;
+        buttons2 |= encoderChange > 0;
+        buttons2 |= (encoderChange < 0) << 1;
         buttons2 |= !digitalRead(12) << 2; //JL Joystick button
 
 #ifdef USE_XY_SHIFTER // milos, added

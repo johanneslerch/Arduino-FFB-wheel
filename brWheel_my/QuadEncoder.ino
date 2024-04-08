@@ -221,14 +221,14 @@ ISR(INT3_vect) {
   gQuadEncoder.Update();
 }
 
-#ifndef USE_ZINDEX
-#ifndef USE_ADS1015
-#ifndef USE_MCP4725
-#ifdef USE_CENTERBTN
 void recenter() {  // milos, added - interrupt function
   myEnc.Write(ROTATION_MID); // set X-axis to 0deg
 }
 
+#ifndef USE_ZINDEX
+#ifndef USE_ADS1015
+#ifndef USE_MCP4725
+#ifdef USE_CENTERBTN
 ISR(INT1_vect) { // milos, added - triger interrupt on D2
   recenter();
 }
