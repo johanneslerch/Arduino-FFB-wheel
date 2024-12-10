@@ -16,7 +16,7 @@ void InitPWM() {
   TOP = calcTOP(pwmstate); // milos, this will set appropriate TOP value for all PWM modes, depending on pwmstate loaded from EEPROM
   
   //JL: limit PWM 
-  MM_MAX_MOTOR_TORQUE = TOP/3;
+  MM_MAX_MOTOR_TORQUE = TOP/2;
   minTorquePP = ((f32)MM_MIN_MOTOR_TORQUE) / ((f32)MM_MAX_MOTOR_TORQUE); // milos
   RCM_min *= RCMscaler(pwmstate); // milos - takes into account fast pwm or phase correct mode
   RCM_zer *= RCMscaler(pwmstate); // milos
