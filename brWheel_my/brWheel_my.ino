@@ -116,7 +116,7 @@ uint8_t last_LC_scaling; //milos
 
 #ifdef USE_LOAD_CELL // milos, added
 //HX711 constructor (dt pin, sck pin)
-HX711_ADC LoadCell(A0, A1); // milos, added
+HX711_ADC LoadCell(A1, A0); // milos, added
 #endif
 
 #ifdef USE_QUADRATURE_ENCODER
@@ -395,6 +395,8 @@ void loop() {
         if (hbrake > hbrakeMax) hbrakeMax = hbrake;
 #endif //end of autocalib
         // milos, rescale all axis according to a new calibration
+        //DEBUG_SERIAL.print("Accel raw: ");
+        //DEBUG_SERIAL.print(accel);
         accel = map(accel, accelMin + dz, accelMax - dz, 0, Z_AXIS_PHYS_MAX);  // milos, with manual calibration
         clutch = map(clutch, clutchMin + dz, clutchMax - dz, 0, RX_AXIS_PHYS_MAX);
         hbrake = map(hbrake, hbrakeMin + dz, hbrakeMax - dz, 0, RY_AXIS_PHYS_MAX);
@@ -403,8 +405,10 @@ void loop() {
         hbrake = constrain(hbrake, 0, RY_AXIS_PHYS_MAX);
 
 #ifdef USE_LOAD_CELL // we use LC
-        DEBUG_SERIAL.print("Raw input: ");
-        DEBUG_SERIAL.print(brake);
+        //DEBUG_SERIAL.print(" Accel: ");
+        //DEBUG_SERIAL.print(accel);
+        //DEBUG_SERIAL.print(" Raw input: ");
+        //DEBUG_SERIAL.print(brake);
         if (brake < bdz) { // milos, cut low values
           brake = 0;
         } else {
@@ -415,12 +419,12 @@ void loop() {
 #endif //milos, end of USE_LOAD_CELL
         brake = constrain(brake, 0, Y_AXIS_PHYS_MAX); // milos
 
-        DEBUG_SERIAL.print(" Brake: ");
-        DEBUG_SERIAL.print(brake);
-        DEBUG_SERIAL.print(" bdz: ");
-        DEBUG_SERIAL.print(bdz);
-        DEBUG_SERIAL.print(" Y_AXIS_PHYS_MAX: ");
-        DEBUG_SERIAL.println(Y_AXIS_PHYS_MAX);
+        //DEBUG_SERIAL.print(" Brake: ");
+        //DEBUG_SERIAL.print(brake);
+        //DEBUG_SERIAL.print(" bdz: ");
+        //DEBUG_SERIAL.print(bdz);
+        //DEBUG_SERIAL.print(" Y_AXIS_PHYS_MAX: ");
+        //DEBUG_SERIAL.println(Y_AXIS_PHYS_MAX);
 
         button = readInputButtons(); // milos, reads all buttons including matrix and hat switch
         button = reorderButtons(button);
@@ -449,7 +453,7 @@ void loop() {
         //SendInputReport((s16)turn, (u16)accel, (u16)brake, (u16)clutch, button);
         //SendInputReport((s16)turn, (u16)accel, (u16)brake, (u16)clutch, (u16)shifterX, (u16)shifterY, buttons); // original
         //SendInputReport((s32)turn, (u16)brake, (u16)accel, (u16)clutch, button); // milos, X, Y, Z, RX, button
-        SendInputReport(turn + MID_REPORT_X + 1, (u16)brake /* 16 bit sent */, 0 /* 12 bit sent */, 
+        SendInputReport(turn + MID_REPORT_X + 1, (u16)brake /* 16 bit sent */, accel /* 12 bit sent */, 
           (1023-analogRead(A4))*4, 
           (1023-analogRead(A3))*4, 
           analogRead(A5)*4, 

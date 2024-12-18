@@ -48,7 +48,7 @@
 #endif // of USE_MCP4725
 #endif // of USE_PROMICRO
 
-#define ACCEL_PIN			A0
+#define ACCEL_PIN			A2
 #ifdef USE_LOAD_CELL // milos
 #define CLUTCH_PIN		A1
 #define HBRAKE_PIN    A2

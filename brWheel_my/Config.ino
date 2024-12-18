@@ -46,16 +46,16 @@ void SetDefaultConfig () { //milos - sets default values
   ffb = 70; //milos, added
   SetParam(PARAM_ADDR_CTS_GAIN, ffb); //milos, added
   //JL Set min motor PWM
-  val = 70; //milos, added
+  val = 80; //milos, added
   SetParam(PARAM_ADDR_MIN_TORQ, val); //milos, added
   //JL Limit max motor PWM
-  val = 250; //milos, for PWM signals
+  val = 290; //milos, for PWM signals
   SetParam(PARAM_ADDR_MAX_TORQ, val); //milos, added
   //minTorquePP = 0.0; //milos, added
   val = 4095; //milos, for 12bit DAC
   SetParam(PARAM_ADDR_MAX_DAC, val); //milos, added
 #ifdef USE_LOAD_CELL
-  val = 12; //milos, default max brake pressure
+  val = 8; //milos, default max brake pressure
 #else
   val = 128; //milos, FFB balance center value
 #endif
@@ -85,9 +85,9 @@ void SetDefaultConfig () { //milos - sets default values
   SetParam(PARAM_ADDR_SHFT_CFG, val); //milos, added
 #endif
 #ifndef USE_AUTOCALIB //milos, added - load default min/max manual cal values for pedals
-  val = 0;
+  val =1920;
   SetParam(PARAM_ADDR_ACEL_LO, val);
-  val = Z_AXIS_PHYS_MAX;
+  val = 2030;
   SetParam(PARAM_ADDR_ACEL_HI, val);
   val = 0;
   SetParam(PARAM_ADDR_BRAK_LO, val);
