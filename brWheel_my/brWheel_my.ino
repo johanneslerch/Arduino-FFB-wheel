@@ -112,6 +112,7 @@ u32 timeDiffConfigSerial = now_micros;
 
 uint16_t dz, bdz; // milos
 uint8_t last_LC_scaling; //milos
+unsigned long validLoadCellData;
 //----------------------------------------- Options -------------------------------------------------------
 
 #ifdef USE_LOAD_CELL // milos, added
@@ -367,10 +368,21 @@ void loop() {
           last_LC_scaling = LC_scaling;
           LoadCell.tare(); //milos, zero out the measurement
         }
+
         //update() should be called at least as often as HX711 sample rate; >10Hz@10SPS, >80Hz@80SPS
         //longer delay in sketch will reduce effective sample rate (be carefull with delay() in loop)
-        LoadCell.update(); //milos, I have configured mine for 80Hz reading by applying 5V at pin15 of HX711 chip (by default it's 10Hz, pin15 grounded)
-        brake = LoadCell.getData(); // milos, read smoothed data from LC (running average of 1 samples, see HX711_ADC.h I modded it)
+        if(LoadCell.update()) { //milos, I have configured mine for 80Hz reading by applying 5V at pin15 of HX711 chip (by default it's 10Hz, pin15 grounded)
+          validLoadCellData = millis();
+        } 
+        
+        if(validLoadCellData < millis() - 2000) {
+          //JL: if load cell doesn't provide data, most likely it's disconnected and the analog pin for accel will pick up noise, so ignore it.
+          brake = 0;
+          accel = 0; 
+        } else {
+          brake = LoadCell.getData(); // milos, read smoothed data from LC (running average of 1 samples, see HX711_ADC.h I modded it)
+        }
+        
 #else // milos, when no LC
 #ifdef USE_ADS1015
         brake = constrain(ads.readADC_SingleEnded(BRAKE_INPUT) * 2, 0 , 4095); //milos, Y axis, 11bit
